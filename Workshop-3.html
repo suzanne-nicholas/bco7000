@@ -13,7 +13,7 @@
 
 <meta name="date" content="2022-03-01" />
 
-<title>Workshop 3 - R Markdown</title>
+<title>Workshop 3 - R Markdown and Workshop 4 - Data Wrangling</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -359,7 +359,8 @@ pre code {
 
 
 
-<h1 class="title toc-ignore">Workshop 3 - R Markdown</h1>
+<h1 class="title toc-ignore">Workshop 3 - R Markdown and Workshop 4 -
+Data Wrangling</h1>
 <h4 class="author">Suzanne Nicholas</h4>
 <h4 class="date">2022-03-01</h4>
 
@@ -368,6 +369,85 @@ pre code {
 
 <div id="data-wrangling" class="section level3">
 <h3>Data wrangling</h3>
+<pre class="r"><code>survey&lt;-read_csv(&quot;https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-05-18/survey.csv&quot;)</code></pre>
+<pre><code>## Rows: 26232 Columns: 18
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (16): timestamp, how_old_are_you, industry, job_title, additional_contex...
+## dbl  (2): annual_salary, other_monetary_comp
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>country&lt;-survey %&gt;%
+  distinct(country)
+
+survey%&gt;%count(country, sort=TRUE)</code></pre>
+<pre><code>## # A tibble: 294 × 2
+##    country                      n
+##    &lt;chr&gt;                    &lt;int&gt;
+##  1 United States             9010
+##  2 USA                       7918
+##  3 US                        2485
+##  4 Canada                    1543
+##  5 United Kingdom             584
+##  6 UK                         579
+##  7 U.S.                       569
+##  8 United States of America   425
+##  9 Usa                        420
+## 10 Australia                  368
+## # … with 284 more rows</code></pre>
+<pre class="r"><code>survey_short&lt;-survey%&gt;%
+  filter(
+    country==&quot;United States&quot; | 
+      country==&quot;USA&quot; | 
+      country==&quot;US&quot;|
+      country==&quot;U.S.&quot;|
+      country==&quot;United States of America&quot;|
+      country==&quot;Usa&quot;
+    )
+
+
+survey_short%&gt;%filter(
+  annual_salary&gt;50000 &amp;
+    gender==&quot;Woman&quot;
+)</code></pre>
+<pre><code>## # A tibble: 13,360 × 18
+##    timestamp   how_old_are_you industry job_title additional_cont… annual_salary
+##    &lt;chr&gt;       &lt;chr&gt;           &lt;chr&gt;    &lt;chr&gt;     &lt;chr&gt;                    &lt;dbl&gt;
+##  1 4/27/2021 … 25-34           Educati… Research… &lt;NA&gt;                     55000
+##  2 4/27/2021 … 25-34           Nonprof… Program … &lt;NA&gt;                     62000
+##  3 4/27/2021 … 25-34           Account… Accounti… &lt;NA&gt;                     60000
+##  4 4/27/2021 … 45-54           Computi… Systems … Data developer/…        112000
+##  5 4/27/2021 … 35-44           Educati… Deputy T… &lt;NA&gt;                     62000
+##  6 4/27/2021 … 25-34           Law      Legal Ai… non-profit law …         52000
+##  7 4/27/2021 … 35-44           Busines… Executiv… &lt;NA&gt;                     85000
+##  8 4/27/2021 … 35-44           Busines… Senior M… &lt;NA&gt;                     98000
+##  9 4/27/2021 … 35-44           Educati… Assistan… &lt;NA&gt;                     54000
+## 10 4/27/2021 … 25-34           Health … Data Pro… &lt;NA&gt;                     74000
+## # … with 13,350 more rows, and 12 more variables: other_monetary_comp &lt;dbl&gt;,
+## #   currency &lt;chr&gt;, currency_other &lt;chr&gt;, additional_context_on_income &lt;chr&gt;,
+## #   country &lt;chr&gt;, state &lt;chr&gt;, city &lt;chr&gt;,
+## #   overall_years_of_professional_experience &lt;chr&gt;,
+## #   years_of_experience_in_field &lt;chr&gt;,
+## #   highest_level_of_education_completed &lt;chr&gt;, gender &lt;chr&gt;, race &lt;chr&gt;</code></pre>
+<pre class="r"><code>survey_short%&gt;%
+  select(how_old_are_you, industry, annual_salary, gender)%&gt;%
+  filter(gender==&quot;Woman&quot;)%&gt;%
+  count(industry, sort = TRUE)</code></pre>
+<pre><code>## # A tibble: 770 × 2
+##    industry                                 n
+##    &lt;chr&gt;                                &lt;int&gt;
+##  1 Computing or Tech                     1845
+##  2 Nonprofits                            1732
+##  3 Education (Higher Education)          1629
+##  4 Health care                           1241
+##  5 Government and Public Administration  1103
+##  6 Accounting, Banking &amp; Finance         1063
+##  7 Engineering or Manufacturing           883
+##  8 Law                                    759
+##  9 Marketing, Advertising &amp; PR            715
+## 10 Education (Primary/Secondary)          592
+## # … with 760 more rows</code></pre>
 <pre class="r"><code>#data loading
 
 data&lt;-read_csv(&quot;https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-05-18/survey.csv&quot;)</code></pre>
