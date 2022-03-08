@@ -63,4 +63,136 @@ data%>%head()
 
 ```
 
+Arranging observations
+
+```{r}
+
+
+
+```
+
+
+
+Groupings and new variables
+
+```{r}
+
+survey_short%>%
+  mutate(total_salary=annual_salary+other_monetary_comp)%>%
+  select(industry, total_salary, annual_salary, other_monetary_comp)
+
+
+survey_short%>%
+  mutate(average_salary=mean(annual_salary, na.rm=TRUE))%>%
+  select(industry, average_salary)
+
+survey_short%>%
+  group_by(industry, gender)%>%
+  mutate(average_salary=mean(annual_salary, na.rm=TRUE))%>%
+  select(industry, gender, average_salary)%>%
+  arrange(desc(average_salary))%>%
+  ungroup()
+
+survey_short%>%
+  group_by(gender, industry)%>%
+  mutate(average_salary=mean(annual_salary, na.rm=TRUE))%>%
+  select(industry, gender, average_salary)%>%
+  arrange(desc(average_salary))%>%
+  ungroup()
+
+
+
+
+#add a new variable max_salary which is maximum salary per industry
+
+survey_short%>%
+  group_by(industry)%>%
+  mutate(max_salary=max(annual_salary, na.rm=TRUE))%>%
+  select(industry, max_salary)%>%
+  arrange(desc(max_salary))%>%
+  ungroup()
+
+
+
+
+
+```
+
+summarising data
+
+```{r}
+
+survey_short%>%
+  group_by(industry)%>%
+  summarise(average_salary=mean(annual_salary, na.rm=TRUE))
+
+#group by industry and gender and use summarise for average_salary
+
+survey_short%>%
+  group_by(industry, gender)%>%
+  summarise(average_salary=mean(annual_salary, na.rm=TRUE))
+
+
+#group by gender and industry and use summarise for average_salary
+
+survey_short%>%
+  group_by(gender, industry)%>%
+  summarise(average_salary=mean(annual_salary, na.rm=TRUE))
+
+#group by industry and gender and use summary for average_salary and max_salary
+
+survey_short%>%
+  group_by(industry, gender)%>%
+  summarise(
+    average_salary=mean(annual_salary, na.rm=TRUE), 
+    max_salary=max(annual_salary, na.rm=TRUE)
+    )
+    
+
+```
+
+
+Case_when
+
+```{r}
+
+survey_short_veryshort<-survey_short%>%
+  select(industry, gender, annual_salary)
+
+
+#if annual_salary is greater than $700,000 than your annual_salary_level is high, otherwise it is low
+# if annual_salary is more than $70,000, but less or equal to 700000 then your annual_salary_level is middle, otherwise it is low.
+
+survey_short_veryshort%>%
+  mutate(
+    annual_salary_level=case_when(
+      annual_salary>700000 ~"high",
+      annual_salary>70000 & annual_salary<=700000 ~ "middle",
+      T~"low"
+    )
+  )%>%
+  arrange(desc(annual_salary))
+
+
+#create a variable highly_paid_women
+#if gender == "Woman" and annual_salary>50000 then (~) it is "high", otherwise it is low
+
+survey_short_veryshort%>%
+  mutate(
+    highly_paid_women=case_when(
+      gender=="Woman" & annual_salary>50000 ~ "high",
+      T ~ "low"
+    )
+  )%>%
+  
+  filter(gender=="Woman")%>%
+  arrange(desc(annual_salary))
+
+
+```
+
+
+
+
+
 
