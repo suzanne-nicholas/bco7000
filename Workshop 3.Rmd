@@ -155,7 +155,7 @@ survey_short%>%
 Case_when
 
 ```{r}
-
+()
 survey_short_veryshort<-survey_short%>%
   select(industry, gender, annual_salary)
 
@@ -191,8 +191,51 @@ survey_short_veryshort%>%
 
 ```
 
+```{r}
+
+data(mpg)
+
+mpg%>% ggplot(
+  aes(displ, hwy, colour = class)) +
+  geom_point()
+  
+mpg%>% ggplot(
+  aes(displ, hwy, colour = year, size = cyl)) +
+  geom_point()
+  
+
+
+```
+
+#install.packages("skimr")
+
+#library(skimr)
+
+#skim(survey)
+
+#task generate as many as possible BEAUTIFUL and MEANINGFUL data viz using survey dataset.
+
+```{r}
+
+#install.packages("skimr")
+
+library(skimr)
+
+skim(survey)
+
+
+```
+
+
+```{r}
+
+survey_short%>% ggplot(
+  
+  aes(state, annual_salary)) +
+    geom_boxplot()
 
 
 
+```
 
 
