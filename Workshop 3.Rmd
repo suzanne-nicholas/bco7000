@@ -10,6 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 library(tidyverse)
 
+
 ```
 
 ### Data wrangling
@@ -229,32 +230,12 @@ skim(survey)
 ```
 
 
-```{r}
-
-survey_short%>% ggplot(
-  
-  aes(state, annual_salary)) +
-    geom_boxplot()
-
-
-
-```
-
-
-```{r}
-
-survey%>%ggplot(
-  aes(gender,annual_salary)) +
-  geom_violin()
-
-
-```
 
 ```{r}
 
 computing_industry%>%ggplot(
   aes(how_old_are_you)) +
-  geom_bar() +
+  geom_bar() %>%
   
   labs(
     title = "AGE OF TECH EMPLOYEES") +
@@ -262,15 +243,12 @@ computing_industry%>%ggplot(
   xlab("age") +
   ylab("no. of employees")
 
-  
-
 ```
-
 
 ```{r}
 
 computing_industry%>%ggplot(
-  aes(gender)) +
+  aes(gender) +
   geom_bar() +
   
   labs(
@@ -279,15 +257,10 @@ computing_industry%>%ggplot(
   xlab("gender") +
   ylab("no. of employees")
 
-  
-
-
-
-
 ```
 
-```{r}
 
+```{r}
 
 computing_industry%>%
   mutate(
@@ -299,16 +272,18 @@ computing_industry%>%
   )%>%
   
  ggplot(
-   aes(computing_salaries, colour=how_old_are_you)) +
+   aes(computing_salaries, colour=gender)) +
   geom_bar(
- )
+ )+
+  
+  labs(
+    title = "Salaries in tech") +
+  
+  xlab("salary ranges") +
+  ylab("no. of employees")
  
 
-
 ```
-
-
-```{r}
 
 
 usa%>%
@@ -327,7 +302,6 @@ usa%>%
  
 
 
-```
 
 
 
