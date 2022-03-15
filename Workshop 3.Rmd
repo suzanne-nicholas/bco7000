@@ -155,7 +155,7 @@ survey_short%>%
 Case_when
 
 ```{r}
-()
+
 survey_short_veryshort<-survey_short%>%
   select(industry, gender, annual_salary)
 
@@ -187,6 +187,8 @@ survey_short_veryshort%>%
   
   filter(gender=="Woman")%>%
   arrange(desc(annual_salary))
+
+
 
 
 ```
@@ -237,5 +239,98 @@ survey_short%>% ggplot(
 
 
 ```
+
+
+```{r}
+
+survey%>%ggplot(
+  aes(gender,annual_salary)) +
+  geom_violin()
+
+
+```
+
+```{r}
+
+computing_industry%>%ggplot(
+  aes(how_old_are_you)) +
+  geom_bar() +
+  
+  labs(
+    title = "AGE OF TECH EMPLOYEES") +
+  
+  xlab("age") +
+  ylab("no. of employees")
+
+  
+
+```
+
+
+```{r}
+
+computing_industry%>%ggplot(
+  aes(gender)) +
+  geom_bar() +
+  
+  labs(
+    title = "Mix of Genders in tech") +
+  
+  xlab("gender") +
+  ylab("no. of employees")
+
+  
+
+
+
+
+```
+
+```{r}
+
+
+computing_industry%>%
+  mutate(
+    computing_salaries=case_when(
+      (annual_salary+other_monetary_comp)>=200000 ~ "Greater than $200,000",
+      (annual_salary+other_monetary_comp)>100000 & (annual_salary+other_monetary_comp)<200000 ~ "Between $100,000 and $199,999",
+      T ~ "lower than $99,999"
+    )
+  )%>%
+  
+ ggplot(
+   aes(computing_salaries, colour=how_old_are_you)) +
+  geom_bar(
+ )
+ 
+
+
+```
+
+
+```{r}
+
+
+usa%>%
+   mutate(
+    summary_salaries=case_when(
+      (annual_salary+other_monetary_comp)>=200000 ~ "Greater than $200,000",
+      (annual_salary+other_monetary_comp)>100000 & (annual_salary+other_monetary_comp)<200000 ~ "Between $100,000 and $199,999",
+      T ~ "lower than $99,999"
+    )
+  )%>%
+  
+ ggplot(
+   aes(summary_salaries, colour=how_old_are_you)) +
+  geom_bar(
+ )
+ 
+
+
+```
+
+
+
+
 
 
