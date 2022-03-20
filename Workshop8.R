@@ -95,3 +95,8 @@ coffee_ratings%>%
   
 results<-lm(total_cup_points~altitude_mean_meters+acidity, data=coffee_ratings)
 summary(results)
+
+x<- NA
+y<- x/1
+
+
