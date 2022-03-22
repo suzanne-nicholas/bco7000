@@ -300,9 +300,44 @@ usa%>%
   geom_bar(
  )
  
+```{r}
+
+library(scales)
+library(lubridate)
+
+```
+ 
+ 
+
+```{r}
+
+survey <- survey %>%
+  mutate(timestamp = mdy_hms(timestamp),
+         age_category = fct_relevel(fct_reorder(how_old_are_you, parse_number(how_old_are_you)), "under 18"),
+         experience_overall = str_replace(overall_years_of_professional_experience, " - ", "-"),
+         experience_overall = fct_reorder(experience_overall, parse_number(experience_overall)),
+         experience_in_field = str_replace(years_of_experience_in_field, " - ", "-"),
+         experience_in_field = fct_reorder(experience_in_field, parse_number(experience_in_field))) %>%
+  mutate(gender = fct_collapse(coalesce(gender, "Other or prefer not to answer"), "Other or prefer not to answer" = c("Other or prefer not to answer", "Prefer not to answer")),
+         race = fct_lump(coalesce(race, "Other"), 4),
+         age=parse_number(how_old_are_you))
 
 
 
+```
+
+
+```{r}
+
+survey_short %>%
+  ggplot(aes(annual_salary)) +
+  geom_histogram() +
+  scale_x_log10(labels = dollar_format()) +
+  labs(x = "Annual")
+
+
+
+```
 
 
 
