@@ -1,0 +1,109 @@
+---
+title: "Workshop10"
+author: "Suzanne Nicholas"
+date: '2022-03-24'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(randomForest)
+library(tidyverse)
+library(skimr)
+library(broom)
+
+```
+
+
+
+```{r}
+
+results <-lm(total_cup_points~altitude_mean_meters, data = coffee_ratings)
+
+summary(results)
+tidy(results)
+
+
+```
+
+```{r}
+
+results_aroma <-lm(total_cup_points~aroma, data = coffee_ratings)
+
+summary(results_aroma)
+tidy(results_aroma)
+
+```
+
+```{r}
+
+results_company <-lm(total_cup_points~company, data = coffee_ratings)
+
+summary(results_company)
+tidy(results_company)
+
+
+
+
+```
+
+
+```{r}
+
+results <-lm(total_cup_points~altitude_mean_meters, data = coffee_ratings)
+
+summary(results)
+tidy(results)
+
+
+```
+
+```{r}
+
+results_balance <-lm(total_cup_points~balance, data = coffee_ratings)
+
+summary(results_balance)
+tidy(results_balance)
+
+```
+
+```{r}
+
+results_aroma_balance <-lm(total_cup_points~aroma + balance, data = coffee_ratings)
+
+summary(results_aroma_balance)
+tidy(results_aroma_balance)
+
+```
+
+```{r}
+
+results_aroma_balance_moisture <-lm(total_cup_points~aroma + balance + moisture, data = coffee_ratings)
+
+summary(results_aroma_balance_moisture)
+tidy(results_aroma_balance_moisture)
+
+```
+
+
+```{r}
+
+results_moisture <-lm(total_cup_points~ moisture, data = coffee_ratings)
+
+summary(results_moisture)
+tidy(results_moisture)
+
+```
+
+
+```{r}
+
+results_producer_year <-lm(total_cup_points~producer + harvest_year + processing_method, data = coffee_ratings)
+
+summary(results_producer_year)
+tidy(results_producer_year)
+
+skim(coffee_ratings)
+
+```

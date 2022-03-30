@@ -1,0 +1,163 @@
+---
+title: "Workshop 7"
+author: "Suzanne Nicholas"
+date: '2022-03-27'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(lubridate)
+library(skimr)
+library(ggplot2)
+library(ggridges)
+theme_set(theme_light())
+
+
+```
+
+
+```{r}
+
+#download data set
+
+coffee_ratings <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-07/coffee_ratings.csv')
+
+
+#creating a new variable called "coffee_id" and giving it the row number and only selecting fields that have positive total_cup_points
+
+coffee_ratings <- coffee_ratings %>%
+  mutate(coffee_id = row_number()) %>%
+  filter(total_cup_points > 0)
+
+
+
+```
+
+
+```{r}
+
+
+#exploring data - this counts the number of different types of coffee species 
+coffee_ratings %>% count(species, sort = TRUE)
+
+#there are only two different types, with Arabica being the most popular
+
+```
+
+```{r}
+
+#this creates a new data set which selects the top 12 different varieties and lumps the rest into a category called "other"
+coffee_lumped <- coffee_ratings %>%
+  filter(!is.na(variety)) %>%
+  mutate(variety = fct_lump(variety, 12), sort = TRUE)
+
+coffee_lumped%>% count(variety, sort = TRUE)
+
+
+```
+
+
+```{r}
+
+
+#this creates an ordered factor of variety - which is ordered based on total_cup_points, and then graphed in a box plot
+coffee_lumped %>%
+  mutate(variety = fct_reorder(variety, total_cup_points)) %>%
+  ggplot(aes(total_cup_points, variety)) +
+  geom_boxplot()
+
+#A boxplot whos the minimum, maximum, median, and the first and third quartiles of a data set. It also shows the spread of data, since we can calculate range and interquartile range.
+
+#It shows that SL28 and SL14 have the highest total_cup_points in terms of median and maximum, and minimum. However, these are not very popular varieties in our dataset. It may be that to achieve these high qualities, they are expensive. 
+
+#On the other hand, the most popular varieties, Caturra, Bourbon and Typica, a different story is told. Caturra is by far the best rated out of the popular varieties, Bourbon is mid range, and Typica is the lowest scorer in cup points. It would be interesting to see other factors, such as price, to see what impacts the popularity of these varieties other than total cup points.
+```
+
+
+
+```{r}
+
+#this visualization is creating a histogram, which shows the distribution of total_cup_points, and compares each variety, using both the fill = variety and facet_wrap feature - note the theme = none, as sometimes the automatic legend is meaningless.
+
+coffee_lumped %>%
+  ggplot(aes(total_cup_points, fill = variety)) +
+  geom_histogram(binwidth = 2) +
+  facet_wrap(~ variety, scale = "free_y") +
+  theme(legend.position = "none")
+
+#this graph, shows a fairly normal distribition of total cup points for each variety. In other words, for the most part, they all represent a bell curve. This is important to run, to see if there is anything strange happening with the data, that might show a distribution not expected.
+```
+
+
+```{r}
+
+coffee_ratings  %>%
+  count(producer, sort =TRUE)
+
+coffee_ratings  %>%
+  count(company, sort =TRUE)
+
+coffee_ratings  %>%
+  count(color, sort =TRUE)
+
+coffee_ratings<-coffee_ratings%>%
+  mutate(country=as_factor(country_of_origin))
+
+coffee_ratings %>%
+  filter(!is.na(country_of_origin))%>%
+  mutate(country = fct_lump(country_of_origin, 12),
+         country = fct_reorder(country, total_cup_points))%>%
+  ggplot(aes(total_cup_points, country))+
+  geom_boxplot()
+
+```
+```{r}
+
+coffee_metrics <- coffee_ratings %>%
+  select(coffee_id, total_cup_points, variety, company, country_of_origin, altitude_mean_meters, aroma:moisture)%>%
+  pivot_longer(aroma:cupper_points, names_to = "metric", values_to = "value")
+
+
+skim(coffee_metrics)
+
+coffee_metrics<-coffee_metrics%>%
+  mutate(metric=as.character(metric)
+)
+
+coffee_metrics %>%
+  mutate(metric = fct_reorder(metric, value)) %>%
+  ggplot(aes(value, metric)) +
+  geom_density_ridges()
+
+
+```
+
+
+```{r}
+
+coffee_metrics%>%
+  group_by(metric)%>%
+  summarise(average = mean(value),
+            sd = sd(value)) %>%
+  arrange(desc(average))
+
+
+
+```
+
+
+```{r}
+
+coffee_ratings%>% filter(altitude_mean_meters < 10000 & altitude !=1) %>%
+  mutate(altitude_mean_meters = pmin(altitude_mean_meters, 3000)) %>%
+  ggplot(aes(altitude_mean_meters, total_cup_points))+
+  geom_point() +
+  geom_smooth(method = "lm")
+  
+
+
+```
+
